@@ -6,7 +6,7 @@ using std::time_t;
 
 class Schedule {
 public:
-	Schedule(tm dateTime, int numberOfPeople, Customer customer) :
+	Schedule(tm dateTime, int numberOfPeople, Customer& customer) :
 		dateTime{ dateTime },
 		numberOfPeople{ numberOfPeople },
 		customer{ customer } {
@@ -20,12 +20,12 @@ public:
 		return numberOfPeople;
 	}
 
-	Customer getCustomer() {
+	Customer& getCustomer() {
 		return customer;
 	}
 
 private:
 	tm dateTime;
 	int numberOfPeople;
-	Customer customer;
+	Customer &customer;
 };
