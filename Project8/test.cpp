@@ -11,6 +11,8 @@ protected:
 	void SetUp() override {
 		NOT_ON_THE_HOUR = getTime(2021, 3, 26, 9, 5);
 		ON_THE_HOUR = getTime(2021, 3, 26, 9, 0);
+		ON_SUNDAY = getTime(2021, 3, 28, 17, 0);
+		ON_MONDAY = getTime(2024, 6, 3, 17, 0);
 
 		bookingScheduler.setSmsSender(&testableSmsSender);
 		bookingScheduler.setMailSender(&testableMailSender);
@@ -30,6 +32,8 @@ public:
 
 	tm NOT_ON_THE_HOUR;
 	tm ON_THE_HOUR;
+	tm ON_SUNDAY;
+	tm ON_MONDAY;
 	Customer CUSTOMER{ "Fake name", "010-1234-5678" };
 	Customer CUSTOMER_WITH_MAIL{ "Fake Name", "010-1234-5678", "test@test.com" };
 	const int UNDER_CAPACITY = 1;
@@ -119,7 +123,7 @@ TEST_F(BookingItem, 이메일이있는경우에는이메일발송) {
 
 TEST_F(BookingItem, 현재날짜가일요일인경우예약불가예외처리) {
 	//arrange
-	BookingScheduler* bookingScheduler = new TestableBookingScheduler{ CAPACITY_PER_HOUR, getTime(2021, 3, 28, 17, 0) };
+	BookingScheduler* bookingScheduler = new TestableBookingScheduler{ CAPACITY_PER_HOUR, ON_SUNDAY };
 	try {
 		//act
 		Schedule* schedule = new Schedule{ ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL };
@@ -132,10 +136,9 @@ TEST_F(BookingItem, 현재날짜가일요일인경우예약불가예외처리) {
 	}
 }
 
-
 TEST_F(BookingItem, 현재날짜가일요일이아닌경우예약가능) {
 	//arrange
-	BookingScheduler* bookingScheduler = new TestableBookingScheduler{ CAPACITY_PER_HOUR, getTime(2024, 6, 3, 17, 0) };
+	BookingScheduler* bookingScheduler = new TestableBookingScheduler{ CAPACITY_PER_HOUR, ON_MONDAY };
 	//act
 	Schedule* schedule = new Schedule{ ON_THE_HOUR, UNDER_CAPACITY, CUSTOMER_WITH_MAIL };
 	bookingScheduler->addSchedule(schedule);
